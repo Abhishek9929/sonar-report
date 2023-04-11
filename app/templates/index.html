@@ -1,0 +1,330 @@
+<html>
+<head>
+	<style>
+
+	h1 {
+    color: white;
+    font-family: verdana;
+    font-size: 300%;
+    color:  #185b77;
+    
+	}
+    	#logo{
+    		    position: absolute;
+    right: 0;
+    top: 0;
+    display: block;
+    height: 125px;
+    width: 350px;
+    	}
+    	ul {
+  list-style-type: none; /* Remove bullets */
+  padding: 0; /* Remove padding */
+  margin: 0; /* Remove margins */
+  padding-bottom: 63px;
+}
+
+ul li {
+	border: 5px solid #ddd;
+    margin-top: -1px;
+    border-color: #053f5808;
+    padding: 10px;
+    border-radius: 7px;
+    margin-bottom: 3;
+    color: #012331;
+    font-size: 100%;
+    font-family: sans-serif;
+
+}
+
+.old {
+  float: left;
+  width: 49%;
+  padding: 5px;
+}
+
+.new {
+  /*float: bottom*/
+  width: 49%;
+  padding: 5px;
+}
+
+.bugs{
+	float: left;
+	width: 100%;
+  	padding: 5px;
+}
+
+#pass{
+/*font-size: 100%;*/
+    color: white;
+    font-family: verdana;
+    font-size: 190%;
+    width: 11%;
+    padding-left: 40;
+    /*border-right: black;*/
+    border-radius: 22px;
+    margin: 22px;
+    background-color: green;
+}
+
+/*#fail {
+    color: white;
+    font-family: verdana;
+    font-size: 190%;
+    width: 11%;
+    padding-left: 40;
+    /*border-right: black;
+    border-radius: 22px;
+    margin: 22px;
+    background-color: #ff0000ab;
+}*/
+
+#leak{
+	/*color: white;*/
+    font-family: verdana;
+    font-size: 150%;
+    color: #185b77;
+
+}
+
+#leak2{
+	/*color: white;*/
+    font-family: verdana;
+    font-size: 120%;
+    color: #185b77;
+
+}
+
+#list{
+	/*color: white;*/
+    font-family: verdana;
+    font-size: 200%;
+    color: #185b77;
+
+}
+
+
+#link{
+	/*color: white;*/
+    font-family: verdana;
+    font-size: 100%;
+    color: #185b77;
+
+}
+
+ol li {
+	border: 5px solid #ddd;
+    margin-top: -1px;
+    border-color: #053f5808;
+    padding: 10px;
+    border-radius: 7px;
+    margin-bottom: 3;
+    color: #012331;
+    font-size: 100%;
+    font-family: sans-serif;
+
+}
+
+h2{
+	color: white;
+    font-family: verdana;
+    font-size: 100%;
+    color: #012331;
+    border: 1px solid black;
+    width: 240;
+    border-radius: 4px;
+    padding: 5px;
+}
+
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+  }
+  
+  td, th {
+    border: 0px solid #96acf1;
+    text-align: left;
+    padding: 8px;
+  }
+  
+  tr:nth-child(even) {
+    background-color: #bec9e7;
+  }
+  
+	</style>
+
+</head>
+<title>{{ title }}</title>
+<!-- <body background="images/bg.jpg"> -->
+<body >
+<!-- <img src="images/logo.png" id="logo"/> -->
+<!-- <h1>SonarQube Report</h1> -->
+<h1>Project : {{ h1 }}</h1>
+<!-- <h1>of project_name</h1> -->
+
+<h2> Latest Analysis Date : {{ lastAnalysisDate }} </h2>
+<h2> PDF generation Date : {{ current_date }} </h2>
+
+
+{% if status == "OK" %}
+  <!-- <h2 id="pass"> PASSED </h2> -->
+   <h2> ANALYSIS RESULT : PASSED </h2>
+{% endif %}
+ 
+{% if status == "ERROR" %}
+  <!-- <h2 id="fail"> FAILED </h2> -->
+  <h2> ANALYSIS RESULT : FAILED </h2>
+{% endif %}
+
+<br>
+<table>
+    <tr><th colspan="2"><center>Summary</center></th></tr>
+
+    <tr><td>Bugs </td><td> {{ number_of_bugs }} </td></tr>
+    <tr><td>Vulnerabilities</td><td> {{ number_of_vulnerabilities }}</td></tr>
+    <tr><td>Code smells</td><td> {{ code_smells }}</td></tr>
+    <tr><td>Lines of Code</td><td> {{ nloc }}</td></tr>
+</table>
+<br><br>
+
+<table>
+    <tr><th colspan="2"><center>Severity</center></th></tr>
+
+    <tr><td>Major </td><td> {{ sev_major }} </td></tr>
+    <tr><td>Minor</td><td> {{ sev_minor }}</td></tr>
+    <tr><td>Blockers</td><td> {{ sev_blockers }}</td></tr>
+    <tr><td>Critical</td><td> {{ sev_critical }}</td></tr>
+</table>
+<br><br>
+
+<table>
+    <tr><th colspan="2"><center>Overview</center></th></tr>
+
+    <tr><td>Duplicated blocks</td><td> {{ technical_debt }}</td></tr>
+    <tr><td>Duplications in percentage</td><td> {{ duplicated_blocks }}</td></tr>
+    <tr><td>Technical debt in days</td><td> {{ duplications_percentage }}</td></tr>
+</table>
+
+<br><br>
+
+<table>
+    <tr><th colspan="2"><center>Leak Period : since {{ leak_period_date }}</center></th></tr>
+    <tr><td>New Bugs</td><td> {{ number_of_new_bugs }}</td></tr>
+    <tr><td>New Vulnerabilities</td><td> {{ number_of_new_vulnerabilities }}</td></tr>
+    <tr><td>New Debt</td><td> {{ new_technical_debt_in_days }}</td></tr>
+</table>
+
+
+<br><br>
+
+<table>
+    <tr><th colspan="2"><center>Count of issues according to Rules</center></th></tr>
+    {% for key,value in bugCountByRules.iteritems() %}
+    <tr><td>{{ name[key] }}</td><td> {{ value }}</td></tr>
+    {% endfor %}
+</table>
+
+<!-- <div class="new">
+<p id="leak"> <b>Leak Period : since {{ leak_period_date }} </b></p>
+<ul>
+{% for key,value in new_data.iteritems() %}
+   <li><b>{{ key }}</b> : {{ value }} </li>
+{% endfor %}
+</ul>
+
+</div> -->
+
+<br><hr>
+<p id="list"> <b>List of Bugs</b><br></p>
+
+<div class="bugs">
+<!-- <hr> -->
+<p id="leak"> <b>1. Major Bugs</b><br></p>
+<p id="link">
+<b>To see complete list : </b>
+    <b><a href="http://{{ sonarqube_server_url }}:{{ sonarqube_server_port }}/dashboard?id={{ key }}">http://{{ sonarqube_server_url }}:{{ sonarqube_server_port }}/dashboard?id={{ key }}</a></b><br><br>
+</p>
+
+<ul>
+{% for bug in major_bugs %}
+	<li>
+      	  {{ bug['message'] }} in <b>{{ bug['component'].split(":")[1] }}</b> | Severity : <b>{{ bug['severity'] }}</b>
+	</li>
+{% endfor %}
+</ul>
+	
+</div>
+
+<div class="bugs">
+    <hr>
+    <p id="leak"> <b>2. Critical Bugs</b><br></p>
+    <p id="link">
+    <b>To see complete list : </b>
+    <b><a href="http://{{ sonarqube_server_url }}:{{ sonarqube_server_port }}/dashboard?id={{ key }}">http://{{ sonarqube_server_url }}:{{ sonarqube_server_port }}/dashboard?id={{ key }}</a></b><br><br>
+    </p>
+    
+    <ul>
+    {% for bug in critical_bugs %}
+        <li>
+            {{ bug['message'] }} in <b>{{ bug['component'].split(":")[1] }}</b> | Severity : <b>{{ bug['severity'] }}</b>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div class="bugs">
+    <hr>
+    <p id="leak"> <b>3. Minor Bugs</b><br></p>
+    <p id="link">
+    <b>To see complete list : </b>
+    <b><a href="http://{{ sonarqube_server_url }}:{{ sonarqube_server_port }}/dashboard?id={{ key }}">http://{{ sonarqube_server_url }}:{{ sonarqube_server_port }}/dashboard?id={{ key }}</a></b><br><br>
+    </p>
+    
+    <ul>
+    {% for bug in minor_bugs %}
+        <li>
+            {{ bug['message'] }} in <b>{{ bug['component'].split(":")[1] }}</b> | Severity : <b>{{ bug['severity'] }}</b>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<div class="bugs">
+    <hr>
+    <p id="leak"> <b>4. Blocker Bugs</b><br></p>
+    <p id="link">
+    <b>To see complete list : </b>
+    <b><a href="http://{{ sonarqube_server_url }}:{{ sonarqube_server_port }}/dashboard?id={{ key }}">http://{{ sonarqube_server_url }}:{{ sonarqube_server_port }}/dashboard?id={{ key }}</a></b><br><br>
+    </p>
+    
+    <ul>
+    {% for bug in blocker_bugs %}
+        <li>
+            {{ bug['message'] }} in <b>{{ bug['component'].split(":")[1] }}</b> | Severity : <b>{{ bug['severity'] }}</b>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+
+<hr>
+<p id="leak"><b> List of Issues according to Rules : </b></p>
+
+{% for rule in bugsByRules %}
+    <p id="leak2"><b>RULE - {{ rule }} | {{ name[rule] }}</b></p>
+    <ul>
+    {% for bug in bugsByRules[rule] %}
+        {% if not bug['line'] %}
+            <li> {{ bug['message'] }} in <b>{{ bug['component'].split(":")[-1] }}</b> </li>
+        {% else %}
+            <li>
+                {{ bug['message'] }} in <b>{{ bug['component'].split(":")[-1] }}</b> at line <b>{{ bug['line'] }}</b>
+            </li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% endfor %}        
+
+</body>
+</html>
